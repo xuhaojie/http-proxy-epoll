@@ -1,25 +1,32 @@
-#ifndef HTTPS_PROXY_LOG_H
-#define HTTPS_PROXY_LOG_H
+#ifndef __LOG_H__
+#define __LOG_H__
+#include <stdio.h>
 
-#include <threads.h>
+// log level
+enum LOG_LEVEL
+{
+	LOG_LEVEL_FATAL = 0,
+	LOG_LEVEL_ERROR = 1,
+    LOG_LEVEL_WARNING = 2,
+	LOG_LEVEL_INFO = 3,
+    LOG_LEVEL_DEBUG = 4,
+	LOG_LEVEL_TRACE = 5,
+};
+ 
+extern unsigned long g_ulLogLevel;
 
-extern thread_local unsigned short thread_id__;
+#define LOG_PRINT(level, level_name, fmt, ...) do{\
+	if(level <= g_ulLogLevel)\
+	{\
+		printf("[File:%s Line:%3d] [%s] "fmt, __FILE__, __LINE__, level_name, ##__VA_ARGS__);\
+	}\
+}while(0);
 
-void log_(const char* filename, int lineno, const char* fn_name, const char* fmt, ...);
+#define LOG_FATAL(fmt, ...) LOG_PRINT(LOG_LEVEL_FATAL, "FATAL", fmt, ##__VA_ARGS__) 
+#define LOG_ERROR(fmt, ...) LOG_PRINT(LOG_LEVEL_ERROR, "ERROR", fmt, ##__VA_ARGS__) 
+#define LOG_WARN(fmt, ...) LOG_PRINT(LOG_LEVEL_WARNING, "WARN", fmt, ##__VA_ARGS__)  
+#define LOG_INFO(fmt, ...) LOG_PRINT(LOG_LEVEL_INFO, "INFO", fmt, ##__VA_ARGS__) 
+#define LOG_DEBUG(fmt, ...) LOG_PRINT(LOG_LEVEL_DEBUG, "DEBUG", fmt, ##__VA_ARGS__) 
+#define LOG_TRACE(fmt, ...) LOG_PRINT(LOG_LEVEL_TRACE, "TRACE", fmt, ##__VA_ARGS__) 
 
-#ifdef NO_LOG
-#define DEBUG_LOG(...) (void)0
-#define LOG(...) (void)0
-#else
-
-#define LOG(...) log_(__FILE__, __LINE__, __func__, __VA_ARGS__)
-
-#ifdef NO_DEBUG_LOG
-#define DEBUG_LOG(...) (void)0
-#else
-#define DEBUG_LOG(...) log_(__FILE__, __LINE__, __func__, __VA_ARGS__)
-#endif
-
-#endif
-
-#endif  // HTTPS_PROXY_LOG_H
+#endif //___LOG_H___

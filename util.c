@@ -20,19 +20,19 @@ char* hsprintf(const char* fmt, ...) {
   return buf;
 }
 
-// Returns a heap-allocated string containing the errno explanation.
-char* errno2s(int errnum) {
-  char* buf = malloc(ERRNO_BUF_SIZE * sizeof(char));
-  char* desc = strerror_r(errnum, buf, ERRNO_BUF_SIZE);
-  if (desc != buf) {
-    // strerror_r returned a pointer to static memory, copy it into the buffer
-    strncpy(buf, desc, ERRNO_BUF_SIZE);
-  }
+// // Returns a heap-allocated string containing the errno explanation.
+// char* errno2s(int errnum) {
+// 	char* buf = malloc(ERRNO_BUF_SIZE * sizeof(char));
+// 	char* desc = strerror_r(errnum, buf, ERRNO_BUF_SIZE);
+// 	if (desc != buf) {
+// 		// strerror_r returned a pointer to static memory, copy it into the buffer
+// 		strncpy(buf, desc, ERRNO_BUF_SIZE - 1);
+// 	}
 
-  return buf;
-}
+// 	return buf;
+// }
 
 void die(const char* message) {
-  fprintf(stderr, "%s\n", message);
-  exit(EXIT_FAILURE);
+	fprintf(stderr, "%s\n", message);
+	exit(EXIT_FAILURE);
 }
